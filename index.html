@@ -1,0 +1,612 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENTRE DOS MENTES</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #292044, #0c0b13 65%);
+      color: #f5f0ff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 22px;
+    }
+    .app { width: 100%; max-width: 440px; }
+    .brand {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .symbol { font-size: 38px; margin-bottom: 12px; }
+    h1 {
+      font-size: 29px;
+      letter-spacing: 3px;
+      margin: 0;
+    }
+    .subtitle {
+      color: #b8a8d6;
+      font-size: 13px;
+      letter-spacing: 2px;
+      margin-top: 10px;
+    }
+    .panel {
+      background: rgba(29, 25, 42, .94);
+      border: 1px solid #514269;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 15px 45px #0007;
+    }
+    h2 { font-size: 20px; margin-top: 0; }
+    p { color: #c8bfd8; line-height: 1.5; }
+    input {
+      width: 100%;
+      background: #100e19;
+      border: 1px solid #514269;
+      border-radius: 11px;
+      padding: 15px;
+      margin: 9px 0;
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+    input:focus { border-color: #d2ad71; }
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 11px;
+      padding: 15px;
+      margin-top: 12px;
+      background: linear-gradient(120deg, #d4b078, #a9824e);
+      color: #17111c;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: #30283e;
+      border: 1px solid #65547b;
+      color: #eee5fa;
+    }
+    button:disabled { opacity: .5; }
+    .divider {
+      text-align: center;
+      color: #9385a8;
+      margin: 19px 0 5px;
+      font-size: 12px;
+    }
+    .hidden { display: none; }
+    .status {
+      background: #171421;
+      border: 1px solid #514269;
+      padding: 14px;
+      border-radius: 12px;
+      margin-top: 16px;
+      color: #d9c9ed;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+    .room-code {
+      font-size: 30px;
+      letter-spacing: 6px;
+      text-align: center;
+      color: #e9c48b;
+      font-weight: bold;
+      margin: 18px 0;
+    }
+    .credit {
+      text-align: center;
+      color: #82758f;
+      font-size: 11px;
+      margin-top: 22px;
+    }
+    .credit strong { color: #c9aa7d; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="brand">
+      <div class="symbol">✧</div>
+      <h1>ENTRE DOS MENTES</h1>
+      <div class="subtitle">DOS PERSONAS · UNA CONEXIÓN</div>
+    </header>
+
+    <section class="panel" id="home">
+      <h2>Comenzar una partida</h2>
+      <p>Elegí tu apodo. Podés crear una sala e invitar a otra persona o entrar con su código.</p>
+
+      <input id="nickname" maxlength="30" placeholder="Tu apodo">
+
+      <button id="createBtn" onclick="createRoom()">CREAR UNA SALA</button>
+
+      <div class="divider">O SI YA TENÉS UN CÓDIGO</div>
+
+      <input id="roomCode" maxlength="8" placeholder="Código de invitación">
+      <button class="secondary" id="joinBtn" onclick="joinRoom()">UNIRME A UNA SALA</button>
+
+      <div id="message" class="status hidden"></div>
+    </section>
+
+    <section class="panel hidden" id="waiting">
+      <h2 id="waitingTitle">Tu sala está creada</h2>
+      <p>Compartí este código con la otra persona para que pueda entrar.</p>
+      <div class="room-code" id="codeDisplay"></div>
+      <button class="secondary" onclick="copyCode()">COPIAR CÓDIGO</button>
+      <div class="status" id="progress">Esperando al otro jugador...</div>
+    </section>
+
+    <footer class="credit">
+      Creado por <strong>_alexanderandress</strong>
+    </footer>
+  </main>
+
+<script>
+  // CONFIGURACIÓN DE SUPABASE
+  const SUPABASE_URL = "https://vumodnepjrebmthbsaus.supabase.co";
+  const SUPABASE_ANON_KEY = "
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENTRE DOS MENTES</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #292044, #0c0b13 65%);
+      color: #f5f0ff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 22px;
+    }
+    .app { width: 100%; max-width: 440px; }
+    .brand {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .symbol { font-size: 38px; margin-bottom: 12px; }
+    h1 {
+      font-size: 29px;
+      letter-spacing: 3px;
+      margin: 0;
+    }
+    .subtitle {
+      color: #b8a8d6;
+      font-size: 13px;
+      letter-spacing: 2px;
+      margin-top: 10px;
+    }
+    .panel {
+      background: rgba(29, 25, 42, .94);
+      border: 1px solid #514269;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 15px 45px #0007;
+    }
+    h2 { font-size: 20px; margin-top: 0; }
+    p { color: #c8bfd8; line-height: 1.5; }
+    input {
+      width: 100%;
+      background: #100e19;
+      border: 1px solid #514269;
+      border-radius: 11px;
+      padding: 15px;
+      margin: 9px 0;
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+    input:focus { border-color: #d2ad71; }
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 11px;
+      padding: 15px;
+      margin-top: 12px;
+      background: linear-gradient(120deg, #d4b078, #a9824e);
+      color: #17111c;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: #30283e;
+      border: 1px solid #65547b;
+      color: #eee5fa;
+    }
+    button:disabled { opacity: .5; }
+    .divider {
+      text-align: center;
+      color: #9385a8;
+      margin: 19px 0 5px;
+      font-size: 12px;
+    }
+    .hidden { display: none; }
+    .status {
+      background: #171421;
+      border: 1px solid #514269;
+      padding: 14px;
+      border-radius: 12px;
+      margin-top: 16px;
+      color: #d9c9ed;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+    .room-code {
+      font-size: 30px;
+      letter-spacing: 6px;
+      text-align: center;
+      color: #e9c48b;
+      font-weight: bold;
+      margin: 18px 0;
+    }
+    .credit {
+      text-align: center;
+      color: #82758f;
+      font-size: 11px;
+      margin-top: 22px;
+    }
+    .credit strong { color: #c9aa7d; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="brand">
+      <div class="symbol">✧</div>
+      <h1>ENTRE DOS MENTES</h1>
+      <div class="subtitle">DOS PERSONAS · UNA CONEXIÓN</div>
+    </header>
+
+    <section class="panel" id="home">
+      <h2>Comenzar una partida</h2>
+      <p>Elegí tu apodo. Podés crear una sala e invitar a otra persona o entrar con su código.</p>
+
+      <input id="nickname" maxlength="30" placeholder="Tu apodo">
+
+      <button id="createBtn" onclick="createRoom()">CREAR UNA SALA</button>
+
+      <div class="divider">O SI YA TENÉS UN CÓDIGO</div>
+
+      <input id="roomCode" maxlength="8" placeholder="Código de invitación">
+      <button class="secondary" id="joinBtn" onclick="joinRoom()">UNIRME A UNA SALA</button>
+
+      <div id="message" class="status hidden"></div>
+    </section>
+
+    <section class="panel hidden" id="waiting">
+      <h2 id="waitingTitle">Tu sala está creada</h2>
+      <p>Compartí este código con la otra persona para que pueda entrar.</p>
+      <div class="room-code" id="codeDisplay"></div>
+      <button class="secondary" onclick="copyCode()">COPIAR CÓDIGO</button>
+      <div class="status" id="progress">Esperando al otro jugador...</div>
+    </section>
+
+    <footer class="credit">
+      Creado por <strong>_alexanderandress</strong>
+    </footer>
+  </main>
+
+<script>
+  // CONFIGURACIÓN DE SUPABASE
+  const SUPABASE_URL = "https://vumodnepjrebmthbsaus.supabase.co";
+  const SUPABASE_ANON_KEY = "PEGAR_AQUI_TU_PUBLISHABLE_KEY";
+
+  const client = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+  let currentRoomCode = "";
+  let progressTimer = null;
+
+  const $ = (id) => document.getElementById(id);
+
+  function showMessage(message) {
+    $("message").textContent = message;
+    $("message").classList.remove("hidden");
+  }
+
+  function setButtons(disabled) {
+    $("createBtn").disabled = disabled;
+    $("joinBtn").disabled = disabled;
+  }
+
+  async function ensureLogin() {
+    const { data: sessionData, error: sessionError } =
+      await client.auth.getSession();
+
+    if (sessionError) throw sessionError;
+    if (sessionData.session) return;
+
+    const { error } = await client.auth.signInAnonymously();
+    if (error) throw error;
+  }
+
+  function getNickname() {
+    const name = $("nickname").value.trim();
+
+    if (name.length < 1 || name.length > 30) {
+      throw new Error("Tu apodo debe tener entre 1 y 30 caracteres.");
+    }
+
+    return name;
+  }
+
+  async function createRoom() {
+    setButtons(true);
+
+    try {
+      const name = getNickname();
+      await ensureLogin();
+
+      const { data, error } = await client.rpc("create_game_room", {
+        p_display_name: name
+      });
+
+      if (error) throw error;
+
+      const room = Array.isArray(data) ? data[0] : data;
+
+      if (!room || !room.room_code) {
+        throw new Error("No recibimos el código de la sala.");
+      }
+
+      currentRoomCode = room.room_code;
+      $("home").classList.add("hidden");
+      $("waiting").classList.remove("hidden");
+      $("codeDisplay").textContent = currentRoomCode;
+      $("waitingTitle").textContent = "¡Sala creada, " + name + "!";
+      $("progress").textContent = "Esperando que se una el segundo jugador...";
+
+      startProgressCheck();
+
+    } catch (error) {
+      showMessage(error.message || "No pudimos crear la sala.");
+    } finally {
+      setButtons(false);
+    }
+  }
+
+  async function joinRoom() {
+    setButtons(true);
+
+    try {
+      const name = getNickname();
+      const code = $("roomCode").value.trim().toUpperCase();
+
+      if (code.length !== 8) {
+        throw new Error("El código debe tener 8 caracteres.");
+      }
+
+      await ensureLogin();
+
+      const { error } = await client.rpc("join_game_room", {
+        p_room_code: code,
+        p_display_name: name
+      });
+
+      if (error) throw error;
+
+      currentRoomCode = code;
+      $("home").classList.add("hidden");
+      $("waiting").classList.remove("hidden");
+      $("codeDisplay").textContent = code;
+      $("waitingTitle").textContent = "¡Te uniste a la sala, " + name + "!";
+      $("progress").textContent = "¡Los dos jugadores están conectados!";
+
+      startProgressCheck();
+
+    } catch (error) {
+      showMessage(error.message || "No pudimos entrar a la sala.");
+    } finally {
+      setButtons(false);
+    }
+  }
+
+  async function copyCode() {
+    try {
+      await navigator.clipboard.writeText(currentRoomCode);
+      $("progress").textContent = "¡Código copiado! Compartilo con tu compañero.";
+    } catch {
+      $("progress").textContent = "Tu código es: " + currentRoomCode;
+    }
+  }
+
+  function startProgressCheck() {
+    if (progressTimer) clearInterval(progressTimer);
+    checkProgress();
+    progressTimer = setInterval(checkProgress, 3000);
+  }
+
+  async function checkProgress() {
+    const { data, error } = await client.rpc("get_game_progress");
+
+    if (error) {
+      $("progress").textContent = "Esperando al segundo jugador...";
+      return;
+    }
+
+    if (!data || data.length < 2) {
+      $("progress").textContent = "Hay un jugador conectado. Esperando al otro...";
+      return;
+    }
+
+    $("progress").textContent =
+      "¡Los dos jugadores están en la sala!\n\n" +
+      data.map(player =>
+        player.display_name + ": " +
+        player.completed_rounds + " de 10 rondas"
+      ).join("\n");
+
+    $("waitingTitle").textContent = "¡La partida está lista!";
+  }
+</script>
+</body>
+</html>
+";
+
+const client = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+  let currentRoomCode = "";
+  let progressTimer = null;
+
+  const $ = (id) => document.getElementById(id);
+
+  function showMessage(message) {
+    $("message").textContent = message;
+    $("message").classList.remove("hidden");
+  }
+
+  function setButtons(disabled) {
+    $("createBtn").disabled = disabled;
+    $("joinBtn").disabled = disabled;
+  }
+
+  async function ensureLogin() {
+    const { data: sessionData, error: sessionError } =
+      await client.auth.getSession();
+
+    if (sessionError) throw sessionError;
+    if (sessionData.session) return;
+
+    const { error } = await client.auth.signInAnonymously();
+    if (error) throw error;
+  }
+
+  function getNickname() {
+    const name = $("nickname").value.trim();
+
+    if (name.length < 1 || name.length > 30) {
+      throw new Error("Tu apodo debe tener entre 1 y 30 caracteres.");
+    }
+
+    return name;
+  }
+
+  async function createRoom() {
+    setButtons(true);
+
+    try {
+      const name = getNickname();
+      await ensureLogin();
+
+      const { data, error } = await client.rpc("create_game_room", {
+        p_display_name: name
+      });
+
+      if (error) throw error;
+
+      const room = Array.isArray(data) ? data[0] : data;
+
+      if (!room || !room.room_code) {
+        throw new Error("No recibimos el código de la sala.");
+      }
+
+      currentRoomCode = room.room_code;
+      $("home").classList.add("hidden");
+      $("waiting").classList.remove("hidden");
+      $("codeDisplay").textContent = currentRoomCode;
+      $("waitingTitle").textContent = "¡Sala creada, " + name + "!";
+      $("progress").textContent = "Esperando que se una el segundo jugador...";
+
+      startProgressCheck();
+
+    } catch (error) {
+      showMessage(error.message || "No pudimos crear la sala.");
+    } finally {
+      setButtons(false);
+    }
+  }
+
+  async function joinRoom() {
+    setButtons(true);
+
+    try {
+      const name = getNickname();
+      const code = $("roomCode").value.trim().toUpperCase();
+
+      if (code.length !== 8) {
+        throw new Error("El código debe tener 8 caracteres.");
+      }
+
+      await ensureLogin();
+
+      const { error } = await client.rpc("join_game_room", {
+        p_room_code: code,
+        p_display_name: name
+      });
+
+      if (error) throw error;
+
+      currentRoomCode = code;
+      $("home").classList.add("hidden");
+      $("waiting").classList.remove("hidden");
+      $("codeDisplay").textContent = code;
+      $("waitingTitle").textContent = "¡Te uniste a la sala, " + name + "!";
+      $("progress").textContent = "¡Los dos jugadores están conectados!";
+
+      startProgressCheck();
+
+    } catch (error) {
+      showMessage(error.message || "No pudimos entrar a la sala.");
+    } finally {
+      setButtons(false);
+    }
+  }
+
+  async function copyCode() {
+    try {
+      await navigator.clipboard.writeText(currentRoomCode);
+      $("progress").textContent = "¡Código copiado! Compartilo con tu compañero.";
+    } catch {
+      $("progress").textContent = "Tu código es: " + currentRoomCode;
+    }
+  }
+
+  function startProgressCheck() {
+    if (progressTimer) clearInterval(progressTimer);
+    checkProgress();
+    progressTimer = setInterval(checkProgress, 3000);
+  }
+
+  async function checkProgress() {
+    const { data, error } = await client.rpc("get_game_progress");
+
+    if (error) {
+      $("progress").textContent = "Esperando al segundo jugador...";
+      return;
+    }
+
+    if (!data || data.length < 2) {
+      $("progress").textContent = "Hay un jugador conectado. Esperando al otro...";
+      return;
+    }
+
+    $("progress").textContent =
+      "¡Los dos jugadores están en la sala!\n\n" +
+      data.map(player =>
+        player.display_name + ": " +
+        player.completed_rounds + " de 10 rondas"
+      ).join("\n");
+
+    $("waitingTitle").textContent = "¡La partida está lista!";
+  }
+</script>
+</body>
+</html>
